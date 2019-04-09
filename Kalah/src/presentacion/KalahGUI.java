@@ -1,6 +1,5 @@
 package presentacion; 
 import aplicacion.KalahGame;
-import presentacion.Oval;
 
 import javax.swing.JFrame;
 import java.awt.*;
@@ -25,7 +24,7 @@ import javax.swing.border.Border;
  * @version ECI 2019
  */
 public class KalahGUI extends JFrame {
-		
+
     private JMenuBar menuBar;
     private JMenu menu;
     private JMenu opciones;
@@ -42,6 +41,8 @@ public class KalahGUI extends JFrame {
     private ImageIcon tituloP;
     private JPanel panel1;
     private JPanel board;
+    private JPanel board2;
+    private JPanel board3;
     private int[] matrizCanicas;
     private int[] matrizSolucion;
     private Color colorEscogido;
@@ -50,7 +51,7 @@ public class KalahGUI extends JFrame {
     private KalahGame game;
     private int numSemillas=3;
     private int conta=0;
-	
+
     private KalahGUI(){
         super("Kalah");
         colorEscogido= Color.blue;
@@ -59,17 +60,8 @@ public class KalahGUI extends JFrame {
         prepareElementosMenu();
         prepararElementosTablero();
         prepareAcciones();
-	}	
-	
-	
-	
-	private void prepareElementos() {
-		this.setTitle("Kalah");
-		Dimension screen = tamanoPantalla();
-		this.setSize(new Dimension(screen.width/2,screen.height/2));
-		centre();
-	}
-	
+    }
+
     private void key(KeyEvent e) {
         int id= e.getKeyCode();
 
@@ -91,6 +83,7 @@ public class KalahGUI extends JFrame {
             limpiar();
         }
     }
+
     private void prepareElementosMenu(){
         menuBar= new JMenuBar();
         menu= new JMenu("Menu");
@@ -138,13 +131,14 @@ public class KalahGUI extends JFrame {
         panel1.add(titulo);
         this.add(panel1,BorderLayout.NORTH);
     }
+
     private void prepareGrid(int tamano) {
         board= new JPanel();
         board.setLayout(new GridLayout(tamano,tamano,5,5));
         board.setBackground(Color.DARK_GRAY);
         board.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY,4));
         prepararPosicionCanicas();
-        for(int i= 0; i < tamano*2; i++) {
+        for(int i= 0; i < tamano+4; i++) {
             if (i%2==0){
                 prepareCanicas(i,Color.RED);
             }
@@ -152,9 +146,28 @@ public class KalahGUI extends JFrame {
                 prepareCanicas(i,Color.BLUE);
             }
         }
-        this.add(board, BorderLayout.CENTER);
-    }
+        board2= new JPanel();
+        board2.setLayout(new GridLayout(1,tamano,1,1));
+        board2.setBackground(Color.DARK_GRAY);
+        board2.setBorder(BorderFactory.createLineBorder(Color.GREEN,4));
+        prepararPosicionCanicas();
+        for(int i= 0; i < 1; i++) {
+            prepareCanicas(i,Color.WHITE);
+        }
 
+        board3= new JPanel();
+        board3.setLayout(new GridLayout(1,tamano,1,1));
+        board3.setBackground(Color.DARK_GRAY);
+        board3.setBorder(BorderFactory.createLineBorder(Color.GREEN,4));
+        prepararPosicionCanicas();
+        for(int i= 0; i < 1; i++) {
+            prepareCanicas(i,Color.BLACK);
+        }
+
+        this.add(board, BorderLayout.CENTER);
+        this.add(board2, BorderLayout.SOUTH);
+        this.add(board3, BorderLayout.NORTH);
+    }
 
     private void prepareCanicas(int i,Color color) {
 //        if (matrizSolucion[i]== 0 && matrizCanicas[i]==0){
@@ -169,18 +182,29 @@ public class KalahGUI extends JFrame {
 //        }
 //        else if(matrizCanicas[i]!= 0) {
 //            if (matrizSolucion[i]== 0) {
-                if (conta==0){
-                    Oval canica= new Oval(Integer.toString(matrizCanicas[i]),Color.red, true,false,false);
+                if (color==Color.WHITE ){
+                    Oval canica= new Oval(Integer.toString(matrizCanicas[i]),Color.red, true,false,false,0);
+                    canica.setBackground(new Color(100, 35, 1));
+                    board2.add(canica);
+                }
+                if (color==Color.BLACK ){
+                    Oval canica= new Oval(Integer.toString(matrizCanicas[i]),Color.red, true,false,false,0);
+                    canica.setBackground(new Color(100, 35, 1));
+                    board3.add(canica);
+                }
+                int variable=0;
+                if (conta == 0) {
+                    Oval canica = new Oval(Integer.toString(matrizCanicas[i]), Color.red, true, false, false, variable);
                     canica.setBackground(new Color(100, 35, 1));
                     board.add(canica);
-                    conta+=1;
-                }
-                else{
-                    Oval canica= new Oval(Integer.toString(matrizCanicas[i]),Color.blue, true,false,false);
+                    conta += 1;
+                } else {
+                    Oval canica = new Oval(Integer.toString(matrizCanicas[i]), Color.blue, true, false, false, variable);
                     canica.setBackground(new Color(100, 35, 1));
                     board.add(canica);
-                    conta=0;
+                    conta = 0;
                 }
+
 //            }
 //            else {
 //                Oval canica= new Oval(Integer.toString(matrizCanicas[i]),Color.red, true,false,true);
@@ -200,10 +224,8 @@ public class KalahGUI extends JFrame {
         file.setDialogTitle("archivos a elegir");
         file.setFileSelectionMode(JFileChooser.FILES_ONLY);
         if (file.showOpenDialog(abrir) == JFileChooser.APPROVE_OPTION) {
-            JOptionPane.showMessageDialog(null, "Elegiste este archivo para abrir: " +
-                    file.getSelectedFile().getName());
+            JOptionPane.showMessageDialog(null, "La funcion abrir esta en construccion ");
         }
-
     }
     private void prepareElementos() {
         this.setTitle("Kalah");
@@ -303,6 +325,7 @@ public class KalahGUI extends JFrame {
     private void refresque() {
         this.revalidate();
     }
+
     private void salvarArchivo() {
         JFileChooser file= new JFileChooser();
         file.setSelectedFile(new File("save.txt"));
@@ -311,10 +334,9 @@ public class KalahGUI extends JFrame {
             String link  =  file.getSelectedFile().getName();
             String files = link.replaceAll("[^a-zA-Z0-9.]"," ");
             String[] split = files.split(" ");
-            JOptionPane.showMessageDialog(null,"Funcion Salvar "+split[split.length-1],"En proceso",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "La funcion guardar esta en construccion ");
         }catch(Exception e){}
     }
-
 
     private void salir(){
         int dialogButton = JOptionPane.showConfirmDialog (null, "Are you sure??","WARNING",JOptionPane.YES_NO_OPTION);
@@ -332,12 +354,11 @@ public class KalahGUI extends JFrame {
     private Dimension tamanoPantalla(){
         return Toolkit.getDefaultToolkit().getScreenSize();
     }
-	
-	public static void main(String[] args){
-		KalahGUI kalah = new KalahGUI();
-		kalah.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		kalah.setVisible(true);
-	}
-	
+
+    public static void KalahGUI(String[] args){
+        KalahGUI kalah = new KalahGUI();
+        kalah.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        kalah.setVisible(true);
+    }
+
 }
- 

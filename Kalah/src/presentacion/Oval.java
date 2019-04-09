@@ -18,8 +18,10 @@ class Oval extends JPanel {
     private boolean isCanica;
     private boolean isCorrect;
     private boolean hueco;
-    public Oval(String numero, Color color, boolean isCanica, boolean isCorrect, boolean hueco) {
+    private int sum;
+    public Oval(String numero, Color color, boolean isCanica, boolean isCorrect, boolean hueco, int suma) {
         super();
+        this.sum=suma;
         this.numero = numero;
         this.color= color;
         this.isCanica= isCanica;
@@ -38,11 +40,12 @@ class Oval extends JPanel {
             g.setColor(Color.BLACK);
             g.fillOval(dx + dx / 2, dy, y, y);
             g.setColor(color);
-            g.fillOval(dx + dx / 2+5, dy+5, y-10, y-10);
+            g.fillOval( dx+sum / 2+5, dy+5, y-10, y-10);
         }
         else {
             g.setColor(color);
-            g.fillOval(dx + dx / 2, dy, y, y);
+            g.fillOval(dx+sum / 2, dy, y, y);
+
         }
         FontMetrics fm = g.getFontMetrics();
         double textWidth = fm.getStringBounds(text, g).getWidth();
