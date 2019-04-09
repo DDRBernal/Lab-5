@@ -52,8 +52,8 @@ class Oval extends JPanel {
         g.setColor(Color.black);
         if(color.equals(Color.gray)) g.setColor(Color.gray);
         if (sum==0){
-        g.drawString(text, (int) (x-38- textWidth/2),
-         (int) (y  + fm.getMaxAscent() / 2));
+            g.drawString(text, (int) (x-38- textWidth/2),
+                    (int) (y  + fm.getMaxAscent() / 2));
         }
     }
 

@@ -20,12 +20,13 @@ import java.util.Random;
 import javax.swing.*;
 import javax.swing.JOptionPane;
 import javax.swing.border.Border;
+import javax.xml.soap.Text;
 
 /**
  * @version ECI 2019
  */
 public class Main extends JFrame {
-
+    static JFrame frame;
     private JMenuBar menuBar;
     private JMenu menu;
     private JMenu opciones;
@@ -41,9 +42,8 @@ public class Main extends JFrame {
     private JLabel titulo;
     private ImageIcon tituloP;
     private JPanel panel1;
-    private JPanel board;
-    private JPanel board2;
-    private JPanel board3;
+    private JPanel board,board2,board3,board4,board5,board6;
+    private JLabel jugador,maquina;
     private int[] matrizSemillas;
     private int[] matrizSolucion;
     private Color colorEscogido;
@@ -150,56 +150,103 @@ public class Main extends JFrame {
         }
 
         board2= new JPanel();
-        board2.setLayout(new GridLayout(1,tamano,10,10));
-        board2.setBackground(Color.DARK_GRAY);
-        board2.setBorder(BorderFactory.createLineBorder(Color.GREEN,4));
+        board2.setLayout(new GridLayout(3,tamano,1,1));
+        board2.setBackground(new Color(200, 221, 0));
+        board2.setBorder(BorderFactory.createLineBorder(new Color(200, 221, 0),4));
         prepararPosicionSemillas();
         for(int i= 0; i < 1; i++) {
             prepareSemillas(i,Color.WHITE);
         }
 
         board3= new JPanel();
-        board3.setLayout(new GridLayout(1,tamano,1,1));
-        board3.setBackground(Color.DARK_GRAY);
-        board3.setBorder(BorderFactory.createLineBorder(Color.GREEN,4));
+        board3.setLayout(new GridLayout(3,tamano,1,1));
+        board3.setBackground(new Color(129, 140, 235));
+        board3.setBorder(BorderFactory.createLineBorder(new Color(129, 140, 235),4));
         prepararPosicionSemillas();
         for(int i= 0; i < 1; i++) {
             prepareSemillas(i,Color.BLACK);
         }
 
+
+
+        jugador = new JLabel("0",SwingConstants.CENTER);
+        board2.add(jugador);
+
+        maquina = new JLabel("0",SwingConstants.CENTER);
+        board3.add(maquina);
+
+        board5= new JPanel();
+        board5.setLayout(new GridLayout(1,tamano,1,1));
+        maquina = new JLabel("maquina");
+        board5.add(maquina);
+
+        board6= new JPanel();
+        board6.setLayout(new GridLayout(1,tamano,1,1));
+        jugador = new JLabel("jugador");
+        board6.add(jugador);
+
         this.add(board, BorderLayout.CENTER);
         this.add(board2, BorderLayout.SOUTH);
+        this.add(board5, BorderLayout.EAST);
+        this.add(board6, BorderLayout.WEST);
         this.add(board3, BorderLayout.NORTH);
+//        this.add(board4, BorderLayout.SOUTH);
+        this.revalidate();
+        this.repaint();
+
     }
 
     private void prepareSemillas(int i,Color color) {
-//        JButton b1 = new JButton("1");
-//        b1.setPreferredSize(new Dimension(20, 20));
-//        b1.setSize(new Dimension(10,30));
-//        board.add(b1);
+        if (conta==0) {
+            JButton myButton = new JButton("3");
+            myButton.addActionListener(new ActionListener()
+            {
+                public void actionPerformed(ActionEvent e)
+                {
+                    myButton.setText("0");
+                }
+            });
+            myButton.setBackground(new Color(200, 221, 0));
+            board.add(myButton);
+            conta+=1;
+        }
+        else{
+            JButton myButton = new JButton("3");
+            myButton.addActionListener(new ActionListener()
+            {
+                public void actionPerformed(ActionEvent e)
+                {
+                    myButton.setText("0");
+                }
+            });
+            myButton.setBackground(new Color(129, 140, 235));
+            board.add(myButton);
+            conta=0;
+        }
 
-        if (color==Color.WHITE ){
-            Oval semilla= new Oval(Integer.toString(matrizSemillas[i]),new Color(100, 35, 1), true,false,false,10);
-            semilla.setBackground(new Color(100, 35, 1));
-            board2.add(semilla);
-        }
-        if (color==Color.BLACK ){
-            Oval semilla= new Oval(Integer.toString(matrizSemillas[i]),new Color(100, 35, 1), true,false,false,10);
-            semilla.setBackground(new Color(100, 35, 1));
-            board3.add(semilla);
-        }
-        int variable=0;
-        if (conta == 0) {
-            Oval semilla = new Oval(Integer.toString(matrizSemillas[i]), Color.red, true, false, false, variable);
-            semilla.setBackground(new Color(100, 35, 1));
-            board.add(semilla);
-            conta += 1;
-        } else {
-            Oval semilla = new Oval(Integer.toString(matrizSemillas[i]), Color.blue, true, false, false, variable);
-            semilla.setBackground(new Color(100, 35, 1));
-            board.add(semilla);
-            conta = 0;
-        }
+//        if (color==Color.WHITE ){
+//            Oval semilla= new Oval(Integer.toString(matrizSemillas[i]),new Color(100, 35, 1), true,false,false,10);
+//            semilla.setBackground(new Color(100, 35, 1));
+//            board2.add(semilla);
+//        }
+//        if (color==Color.BLACK ){
+//            Oval semilla= new Oval(Integer.toString(matrizSemillas[i]),new Color(100, 35, 1), true,false,false,10);
+//            semilla.setBackground(new Color(100, 35, 1));
+//            board3.add(semilla);
+//        }
+//        int variable=0;
+//        if (conta == 0) {
+//            Oval semilla = new Oval(Integer.toString(matrizSemillas[i]), Color.red, true, false, false, 0);
+//            semilla.setBackground(new Color(100, 35, 1));
+//            board.add(semilla);
+//            conta += 1;
+//        }
+//         else {
+//            Oval semilla = new Oval(Integer.toString(matrizSemillas[i]), Color.blue, true, false, false, variable);
+//            semilla.setBackground(new Color(100, 35, 1));
+//            board.add(semilla);
+//            conta = 0;
+//        }
     }
 
     private void abrirArchivo() {
@@ -238,6 +285,12 @@ public class Main extends JFrame {
         salir.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 salir();
+            }
+        });
+        chooseColorB.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                chooseColor();
             }
         });
         addKeyListener(new KeyListener() {
@@ -285,7 +338,7 @@ public class Main extends JFrame {
         if (colorEscogido == null) {
             colorEscogido= Color.BLUE;
         }
-        limpiar();
+        refresque();
     }
 
     private void limpiar() {
@@ -307,7 +360,12 @@ public class Main extends JFrame {
         refresque();
     }
     private void refresque() {
+        panel1.removeAll();
+        this.remove(panel1);
+        prepareGrid(tamano);
+//        this.repaint();
         this.revalidate();
+        repaint();
     }
 
     private void salvarArchivo() {
