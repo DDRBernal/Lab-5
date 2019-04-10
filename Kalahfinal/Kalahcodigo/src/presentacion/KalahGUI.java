@@ -48,12 +48,13 @@ public class KalahGUI extends JFrame {
     private int[] matrizSolucion;
     private Color colorEscogido,colorEscogido2;
     private boolean colorCambiado= false;
-    private boolean colorCambiado2= false; 
+    private boolean colorCambiado2= false;
     private int tamano= 6;
     private int Semillas= 3;
     private KalahGame game;
     private int numSemillas=3;
     private int conta=0;
+    private JButton[][] buttonGrid = new JButton[2][tamano];
 
     private KalahGUI(){
         super("Kalah");
@@ -145,23 +146,23 @@ public class KalahGUI extends JFrame {
         prepararPosicionSemillas();
         for(int i= 0; i < tamano+4; i++) {
             if (i%2==0){
-            	if(!colorCambiado) {colorEscogido=Color.GREEN;}
+                if(!colorCambiado) {colorEscogido=Color.GREEN;}
                 prepareSemillas(i,colorEscogido);
 
             }
             else{
-            	if(!colorCambiado2) {colorEscogido2=Color.BLUE;}
+                if(!colorCambiado2) {colorEscogido2=Color.BLUE;}
                 prepareSemillas(i,colorEscogido2);
             }
         }
-        
+
         board2= new JPanel();
         board2.setLayout(new GridLayout(3,tamano,1,1));
         board2.setBackground(new Color(200, 221, 0));
         board2.setBorder(BorderFactory.createLineBorder(new Color(200, 221, 0),4));
         prepararPosicionSemillas();
         for(int i= 0; i < 1; i++) {
-        	if(!colorCambiado){colorEscogido=Color.GREEN;}
+            if(!colorCambiado){colorEscogido=Color.GREEN;}
             prepareSemillas(i,colorEscogido);
         }
 
@@ -171,7 +172,7 @@ public class KalahGUI extends JFrame {
         board3.setBorder(BorderFactory.createLineBorder(new Color(129, 140, 235),4));
         prepararPosicionSemillas();
         for(int i= 0; i < 1; i++) {
-        	if(!colorCambiado2) {colorEscogido2=Color.BLUE;}
+            if(!colorCambiado2) {colorEscogido2=Color.BLUE;}
             prepareSemillas(i,colorEscogido2);
         }
 
@@ -204,24 +205,33 @@ public class KalahGUI extends JFrame {
     }
 
     private void prepareSemillas(int i,Color color) {
+        JButton myButton = new JButton("3");
+        for (int row = 0; row < 2; row++) {
+            for (int col = 0; col < tamano; col++) {
+                buttonGrid[row][col]=myButton;}}
         if (conta==0) {
-            JButton myButton = new JButton("3");
+
+
             myButton.setBackground(color);
             myButton.setOpaque(true);
             myButton.addActionListener(new ActionListener()
-            
             {
                 public void actionPerformed(ActionEvent e)
                 {
-                    myButton.setText("0");
+                    JButton selectedBtn = (JButton) e.getSource();
+                    for (int row = 0; row < 2; row++) {
+                        for (int col = 0; col < tamano; col++) {
+                            if (buttonGrid[row][col]==selectedBtn) {
+                                game.modifiquematriz(row,col);
+                            }
                 }
-            });
-            
+            }}});
+
             board.add(myButton);
             conta+=1;
         }
         else{
-            JButton myButton = new JButton("3");
+//            JButton myButton = new JButton("3");
             myButton.setBackground(color);
             myButton.setOpaque(true);
             myButton.addActionListener(new ActionListener()
@@ -328,16 +338,16 @@ public class KalahGUI extends JFrame {
     }
 
     private void chooseColor() {
-    	colorCambiado=true;
+        colorCambiado=true;
         colorEscogido= JColorChooser.showDialog(null, "color usuario", colorEscogido);
         if (colorEscogido == null) {
             colorEscogido= Color.GREEN;
         }
         refresque();
     }
-    
+
     private void chooseColor2() {
-    	colorCambiado2=true;
+        colorCambiado2=true;
         colorEscogido2= JColorChooser.showDialog(null, "color maquina", colorEscogido2);
         if (colorEscogido == null) {
             colorEscogido2= Color.BLUE;
@@ -364,7 +374,7 @@ public class KalahGUI extends JFrame {
         refresque();
     }
     private void refresque() {
-    	board.removeAll();
+        board.removeAll();
         this.remove(board);
         prepareGrid(tamano);
         this.revalidate();

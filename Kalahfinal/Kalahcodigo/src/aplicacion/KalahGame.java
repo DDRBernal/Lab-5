@@ -5,19 +5,21 @@ public class KalahGame {
     private int[] matrizSemillas;
     private int[] matrizSolucion;
     private int tamanoTablero;
-    private int cantidadBolas;
+    private int Semillas;
     private ArrayList<int[]> posiciones;
     private ArrayList<Integer> caidos;
     private Hashtable<Integer,int[]> espacios;
+    private int [][] matrizAdyacente = new int[2][tamanoTablero];
 
-    public KalahGame(int tamanoTablero, int cantidadBolas) {
+    public KalahGame(int tamanoTablero, int Semillas) {
         this.tamanoTablero= tamanoTablero;
-        this.cantidadBolas= cantidadBolas;
+        this.Semillas= Semillas;
         posiciones= new ArrayList<int[]>();
         caidos= new ArrayList<Integer>();
         espacios= new Hashtable<Integer,int[]>();
         llenarSemillas();
         llenarSolucion();
+        llenarMatriz();
     }
     public KalahGame(int[] matrizSemillas, int[] matrizSolucion) {
         this.matrizSemillas= matrizSemillas.clone();
@@ -38,7 +40,7 @@ public class KalahGame {
             }
         }
         this.tamanoTablero= (int) Math.pow(matrizSemillas.length, 0.5);
-        this.cantidadBolas= cont;
+        this.Semillas= cont;
     }
 
     /*
@@ -50,7 +52,7 @@ public class KalahGame {
         matrizSemillas= new int[tamanoTablero*tamanoTablero];
         limpiar();
         int cont= 0;
-        while (cont < cantidadBolas) {
+        while (cont < Semillas) {
             if(matrizSemillas[num]== 0) {
                 posiciones.add(new int[] {cont+1,num,0});
                 matrizSemillas[num]= cont+1;
@@ -70,7 +72,7 @@ public class KalahGame {
             matrizSolucion[i]= 0;
         }
         int cont= 0;
-        while (cont < cantidadBolas) {
+        while (cont < Semillas) {
             if(matrizSolucion[num]== 0 && matrizSemillas[num]== 0) {
                 matrizSolucion[num]= cont+1;
                 cont++;
@@ -315,6 +317,13 @@ public class KalahGame {
         }
     }
 
+    private void llenarMatriz(){
+        for (int i=0; i<2;i++){
+            for (int j=0;j<tamanoTablero;j++){
+                matrizAdyacente[i][j]=Semillas;
+            }
+        }
+    }
     /*
      * verifica si un elemento dado esta en un arreglo dado.
      */
@@ -323,5 +332,10 @@ public class KalahGame {
             if(i.equals(pivo)) {return true;}
         }
         return false;
+    }
+
+    public void modifiquematriz(int x, int y){
+        matrizAdyacente[x][y]=0;
+//        for (){}
     }
 }
