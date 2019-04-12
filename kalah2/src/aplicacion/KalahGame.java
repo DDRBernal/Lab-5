@@ -5,19 +5,29 @@ public class KalahGame {
     private int[] matrizSemillas;
     private int[] matrizSolucion;
     private int tamanoTablero;
-    private int cantidadBolas;
+    private int Semillas;
     private ArrayList<int[]> posiciones;
     private ArrayList<Integer> caidos;
     private Hashtable<Integer,int[]> espacios;
+    private int [][] matrizAdyacente;
+    private int barraJugador=0;
+    private int barraMaquina=0;
+    private int numeroDeJugadas=0;
+    private ArrayList<Integer> lista = new ArrayList<Integer>();
+    private ArrayList<Integer> GanoJugador = new ArrayList<>();
+    private ArrayList<Integer> GanoMaquina = new ArrayList<>();
+    private int otraVez=0;
+    private boolean IsJugador;
 
-    public KalahGame(int tamanoTablero, int cantidadBolas) {
+    public KalahGame(int tamanoTablero, int Semillas) {
         this.tamanoTablero= tamanoTablero;
-        this.cantidadBolas= cantidadBolas;
+        this.Semillas= Semillas;
         posiciones= new ArrayList<int[]>();
         caidos= new ArrayList<Integer>();
         espacios= new Hashtable<Integer,int[]>();
         llenarSemillas();
         llenarSolucion();
+        llenarMatriz();
     }
     public KalahGame(int[] matrizSemillas, int[] matrizSolucion) {
         this.matrizSemillas= matrizSemillas.clone();
@@ -38,7 +48,7 @@ public class KalahGame {
             }
         }
         this.tamanoTablero= (int) Math.pow(matrizSemillas.length, 0.5);
-        this.cantidadBolas= cont;
+        this.Semillas= cont;
     }
 
     /*
@@ -50,7 +60,7 @@ public class KalahGame {
         matrizSemillas= new int[tamanoTablero*tamanoTablero];
         limpiar();
         int cont= 0;
-        while (cont < cantidadBolas) {
+        while (cont < Semillas) {
             if(matrizSemillas[num]== 0) {
                 posiciones.add(new int[] {cont+1,num,0});
                 matrizSemillas[num]= cont+1;
@@ -70,7 +80,7 @@ public class KalahGame {
             matrizSolucion[i]= 0;
         }
         int cont= 0;
-        while (cont < cantidadBolas) {
+        while (cont < Semillas) {
             if(matrizSolucion[num]== 0 && matrizSemillas[num]== 0) {
                 matrizSolucion[num]= cont+1;
                 cont++;
@@ -315,8 +325,16 @@ public class KalahGame {
         }
     }
 
+    private void llenarMatriz(){
+        matrizAdyacente = new int[tamanoTablero][2];
+        for (int i=0; i<tamanoTablero;i++){
+            for (int j=0;j<2;j++){
+                matrizAdyacente[i][j]=Semillas;
+            }
+        }
+    }
     /*
-     * verifica si un elemento dado esta en un arreglo dado.
+     * GanoJugador si un elemento dado esta en un arreglo dado.
      */
     private boolean isInArray(ArrayList<Integer> array,int pivo) {
         for(Integer i: array) {
@@ -324,4 +342,154 @@ public class KalahGame {
         }
         return false;
     }
+
+
+    private void HaciaArriba(int semillasRestantes){
+        int contador=tamanoTablero-1;
+        int semillas1 = semillasRestantes;
+        if (semillas1>=1 && IsJugador){barraJugador+=1;}
+        semillas1-=1;
+        if (semillas1>0){
+            int posicion=1;
+            while (semillas1>0){
+                matrizAdyacente[contador][posicion]+=1;
+                contador-=1;
+                if (contador==0){
+                    HaciaAbajo(semillas1);
+                    return;
+                }
+                semillas1-=1;
+            }
+//            if (contador>=-1 && !IsJugador){
+//                if (matrizAdyacente[contador+1][1]==1){
+//                    barraMaquina+=matrizAdyacente[contador+1][0];
+//                }
+//            }
+        }
+        else {
+            otraVez+=1;
+        }
+    }
+
+
+    public void modifiquematriz(int x, int y, boolean jugador){
+        otraVez=0;
+        IsJugador=jugador;
+        int otra=0;
+        int numSemillas = matrizAdyacente[x][y];
+        matrizAdyacente[x][y]=0;
+        int contador=x+1;
+        int posicion=0;
+        //Lado Jugador
+        if (y%2==0){
+            while (numSemillas>0){
+                if (contador==tamanoTablero) {
+                    HaciaArriba(numSemillas);
+                    return;
+                }
+                matrizAdyacente[contador][posicion] += 1;
+                contador+=1;
+                numSemillas-=1;
+            }
+            //Reglas
+//            if (contador>=0){
+//                if (matrizAdyacente[contador-1][0]==1){
+//                    barraJugador+=matrizAdyacente[contador-1][1];
+//                }
+//            }
+        }
+        //Lado Maquina
+        else{
+            contador-=2;
+            posicion=1;
+            while (numSemillas>0){
+                if (contador==-1){
+                    HaciaAbajo(numSemillas);
+                    return;
+                }
+                matrizAdyacente[contador][posicion] += 1;
+                matrizAdyacente[contador][1]+=1;
+                contador-=1;
+                numSemillas-=1;
+            }
+            //Reglas
+//            if (contador>=-1 && !IsJugador){
+//                if (matrizAdyacente[contador+1][1]==1){
+//                    barraMaquina+=matrizAdyacente[contador+1][0];
+//                }
+//            }
+        }
+    }
+
+    public void HaciaAbajo(int semillasRestantes){
+        int contador=0;
+        int semillas1 = semillasRestantes;
+        if (semillas1>=1 && !IsJugador){barraMaquina+=1;}
+        semillas1-=1;
+        if (semillas1>0){
+            int posicion=0;
+            while (semillas1>0){
+                if (contador==tamanoTablero){
+                    HaciaArriba(semillas1);
+                    return;
+                }
+                matrizAdyacente[contador][posicion]+=1;
+                contador+=1;
+                semillas1-=1;
+            }
+//           if (contador>=0){
+//                if (matrizAdyacente[contador-1][0]==1){
+//                    barraJugador+=matrizAdyacente[contador-1][1];
+//                }
+//            }
+        }
+        else{
+            otraVez+=1;
+        }
+    }
+
+    public ArrayList<Integer> getMatrizAdyacente()
+    {
+        for (int i=0; i<tamanoTablero;i++){
+            for (int j=0;j<2;j++){
+                lista.add(matrizAdyacente[i][j]);
+                if (i%2==0){
+                    GanoJugador.add(matrizAdyacente[i][j]);
+                }
+                else {
+                    GanoMaquina.add(matrizAdyacente[i][j]);
+                }
+            }}
+        return lista;
+    }
+
+
+
+    public int getSemillasMaquina(){
+        return barraMaquina;
+    }
+    public int getSemillasJugador(){
+        return barraJugador;
+    }
+
+    public boolean ganoJugador(){
+        for (int i =0 ; i<GanoJugador.size();i++){
+            if (GanoJugador.get(i)!=0){
+                return false;
+            }}
+        return true;
+    }
+
+    public boolean perdioJugador(){
+        for (int i =0 ; i<GanoJugador.size();i++){
+            if (GanoJugador.get(i)!=0){
+                return false;
+            }}
+        return true;
+    }
+
+    public int getOtraVez(){
+        return otraVez;
+    }
+
 }

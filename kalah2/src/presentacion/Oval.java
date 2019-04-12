@@ -19,14 +19,36 @@ class Oval extends JPanel {
     private boolean isCorrect;
     private boolean hueco;
     private int sum;
-    public Oval(String numero, Color color, boolean isCanica, boolean isCorrect, boolean hueco, int suma) {
+    private int x,y;
+    public Oval(String numero, Color color, boolean isCanica, boolean isCorrect, boolean hueco, int x, int y) {
         super();
-        this.sum=suma;
+        this.x = x;
+        this.y = y;
         this.numero = numero;
-        this.color= color;
-        this.isCanica= isCanica;
-        this.isCorrect= isCorrect;
-        this.hueco= hueco;
+        this.color = color;
+        this.isCanica = isCanica;
+        this.isCorrect = isCorrect;
+        this.hueco = hueco;
+//        prepareAcciones();
+//        }
+//        public void prepareAcciones(){
+//            this.addMouseListener(new MouseAdapter(){
+//                public  void mouseClicked(MouseEvent e){
+//                    oprimir();
+//                }
+//			/*
+//			public void mousePressed(MouseEvent e){
+//				preSel();
+//			}
+//			public void mouseReleased(MouseEvent e){
+//				endSel();
+//			}
+//			*/
+//            });
+//    }
+//
+//    private oprimir (){
+
     }
 
     public void paintComponent(Graphics g) {
